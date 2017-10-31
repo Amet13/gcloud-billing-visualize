@@ -1,0 +1,29 @@
+Line Item,Total Consumption,Units,Cost,Currency,Project ID,Description
+com.google.cloud/services/cloud-storage/ClassARequestMultiRegional,74,requests,0.00037,USD,test-project,Class A Request Multi-Regional Storage
+com.google.cloud/services/cloud-storage/ClassARequestRegional,13241,requests,0.066205,USD,test-project,Class A Request Regional Storage
+com.google.cloud/services/cloud-storage/ClassBRequestMultiRegional,1,requests,0,USD,test-project,Class B Request Multi-Regional Storage
+com.google.cloud/services/cloud-storage/ClassBRequestRegional,2093,requests,0.000836,USD,test-project,Class B Request Regional Storage
+com.google.cloud/services/cloud-storage/StorageMultiRegionalEuGbsec,156197675093095424,byte-seconds,1.412123,USD,test-project,Multi-Regional Storage Europe
+com.google.cloud/services/cloud-storage/StorageMultiRegionalUsGbsec,23069696,byte-seconds,0,USD,test-project-dev,Multi-Regional Storage US
+com.google.cloud/services/cloud-storage/StorageMultiRegionalUsGbsec,17721913810944,byte-seconds,0.00016,USD,test-project,Multi-Regional Storage US
+com.google.cloud/services/cloud-storage/StorageRegionalEuGbsec,45298501344256,byte-seconds,0.000315,USD,test-project-dev,Regional Storage Europe
+com.google.cloud/services/cloud-storage/StorageRegionalEuGbsec,373140891340231680,byte-seconds,2.594941,USD,test-project,Regional Storage Europe
+com.google.cloud/services/cloud-storage/StorageRegionalUsGbsec,351319853056,byte-seconds,0,USD,test-project-dev,Regional Storage US
+com.google.cloud/services/compute-engine/Licensed1000201Core,51599,seconds,0,USD,test-project,Licensing Fee for Ubuntu 16.04 (Xenial Xerus) running on Instance Core
+com.google.cloud/services/compute-engine/Licensed1000201CoreRange_1_OrMore,12899,seconds,0,USD,test-project,Licensing Fee for Ubuntu 16.04 (Xenial Xerus) running on Instance Core
+com.google.cloud/services/compute-engine/Licensed1000201Ram,49859201597440,byte-seconds,0,USD,test-project,Licensing Fee for Ubuntu 16.04 (Xenial Xerus) running on Instance Ram
+com.google.cloud/services/compute-engine/Licensed1000207Core,1147253,seconds,0,USD,test-project,Licensing Fee for CentOS 7 running on Instance Core
+com.google.cloud/services/compute-engine/Licensed1000207CoreRange_1_OrMore,438233,seconds,0,USD,test-project,Licensing Fee for CentOS 7 running on Instance Core
+com.google.cloud/services/compute-engine/Licensed1000207G1Small,12900,seconds,0,USD,test-project,Licensing Fee for CentOS 7 running on Small instance with 1 VCPU
+com.google.cloud/services/compute-engine/Licensed1000207Ram,2384198623035392,byte-seconds,0,USD,test-project,Licensing Fee for CentOS 7 running on Instance Ram
+com.google.cloud/services/compute-engine/Licensed1000213Core,51600,seconds,0.573333,USD,test-project,Licensing Fee for Windows Server 2016 Datacenter Edition running on Instance Core
+com.google.cloud/services/compute-engine/Licensed1000213Ram,110810156236800,byte-seconds,0,USD,test-project,Licensing Fee for Windows Server 2016 Datacenter Edition running on Instance Ram
+com.google.cloud/services/compute-engine/NetworkGoogleEgressEuEu,26303489,bytes,0,USD,test-project,Network Google Egress from EMEA to EMEA
+com.google.cloud/services/compute-engine/NetworkGoogleIngressEuEu,12944123,bytes,0,USD,test-project,Network Google Ingress from EMEA to EMEA
+com.google.cloud/services/compute-engine/NetworkInterRegionEgressEuNa,16108,bytes,0,USD,test-project,Network Inter Region Egress from EMEA to Americas
+com.google.cloud/services/compute-engine/VmimageG1Small_Eu,146999,seconds,1.163742,USD,test-project,Small instance with 1 VCPU running in EMEA
+com.google.cloud/services/compute-engine/VmimageN1Highcpu_4,73500,seconds,2.89508,USD,test-project,Highcpu Intel N1 4 VCPU running in Americas
+com.google.cloud/services/compute-engine/VmimageN1Standard_1_Eu,220498,seconds,3.203335,USD,test-project,Standard Intel N1 1 VCPU running in EMEA
+com.google.cloud/services/compute-engine/VmimageN1Standard_2_Eu,220498,seconds,6.406681,USD,test-project,Standard Intel N1 2 VCPU running in EMEA
+com.googleapis/services/pubsub/MessageOperations,94,requests,0,USD,test-project,Message Operations
+com.googleprod/services/stackdriver/Billable_monitored_resource_usage_free_tier,3816000,seconds,0,USD,test-project,Basic Tier - Monitored Resource Usage (in Resource Hours)
