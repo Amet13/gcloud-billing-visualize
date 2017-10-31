@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 PREFIX="report"
 DATE=$(date +"%Y-%m-%d" --date="yesterday")
 FILENAME="csv/${PREFIX}-${DATE}.csv"

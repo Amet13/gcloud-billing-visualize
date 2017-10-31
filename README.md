@@ -3,14 +3,15 @@ gcloud-billing-visualize
 
 [![License](https://img.shields.io/badge/license-GNU_GPLv3-green.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 
-Visualize your google cloud daily reports for pretty html page with sorting by column titles — https://gcloud-billing.amet13.name/
+Visualize your google cloud daily reports for pretty html page — https://gcloud-billing.amet13.name/
 
 How to setup
 ------------
 
-Go to https://console.cloud.google.com/ (Billing -> Go to linked billing account -> Manage billing accounts -> Billing export -> File export).
-Set `bucket name`, `report prefix` and `format` (CSV).
-Enable billing export.
+* Go to https://console.cloud.google.com/
+* Billing -> Go to linked billing account -> Manage billing accounts -> Billing export -> File export
+* Set `bucket name`, `report prefix` and `format` (CSV)
+* Enable billing export
 
 Mount bucket (next day) after generating billing reports:
 ```
@@ -38,6 +39,23 @@ Add to cron:
 crontab -e
 0 * * * * /srv/gcloud-billing-visualize/generate.bash
 ```
+
+Setup nginx config:
+```
+vim /etc/nginx/conf.d/billing-report.conf
+server {
+    listen      8080;
+    server_name billing-report.domain.com;
+    root        /srv/gcloud-billing-visualize;
+    location / {
+        index index.html;
+    }
+}
+
+nginx -s reload
+```
+
+Check: http://billing-report.domain[.]com:8080
 
 TODO
 ----
