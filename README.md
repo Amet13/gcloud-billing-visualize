@@ -3,7 +3,7 @@ gcloud-billing-visualize
 
 [![License](https://img.shields.io/badge/license-GNU_GPLv3-green.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 
-Visualize your google cloud daily reports for pretty html page — https://gcloud-billing.amet13.name/
+Visualize your google cloud daily reports with pretty html page — https://gcloud-billing.amet13.name/
 
 How to setup
 ------------
@@ -37,7 +37,7 @@ Run script:
 Add to cron:
 ```
 crontab -e
-0 * * * * /srv/gcloud-billing-visualize/generate.bash
+0 1 * * * /srv/gcloud-billing-visualize/generate.bash
 ```
 
 Setup nginx config:
@@ -61,4 +61,4 @@ TODO
 ----
 
 * charts
-* group by columns
+* group by line item
