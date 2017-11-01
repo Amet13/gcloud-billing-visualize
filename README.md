@@ -40,7 +40,7 @@ crontab -e
 0 1 * * * /srv/gcloud-billing-visualize/generate.bash
 ```
 
-Setup nginx config:
+Setup nginx config and set basic authentication:
 ```
 vim /etc/nginx/conf.d/billing-report.conf
 server {
@@ -49,9 +49,12 @@ server {
     root        /srv/gcloud-billing-visualize;
     location / {
         index index.html;
+        auth_basic "Closed site";
+        auth_basic_user_file /etc/nginx/htpasswd;
     }
 }
 
+htpasswd -c -m /etc/nginx/htpasswd username
 nginx -s reload
 ```
 
