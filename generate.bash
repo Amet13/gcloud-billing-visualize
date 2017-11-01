@@ -3,9 +3,10 @@
 set -e
 
 PREFIX="report"
+BUCKET_PATH="./csv"
 DATE=$(date +"%Y-%m-%d" --date="yesterday")
-#DATE="2017-10-31"
-FILENAME="csv/${PREFIX}-${DATE}.csv"
+#DATE="2017-10-31" # I'm using it for demo
+FILENAME="${BUCKET_PATH}/${PREFIX}-${DATE}.csv"
 YESTERDAY_REPORT="csv/yesterday_report.csv"
 INDEX_HTML="index.html"
 

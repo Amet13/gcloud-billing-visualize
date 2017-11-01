@@ -13,7 +13,7 @@ How to setup
 * Set `bucket name`, `report prefix` and `format` (CSV)
 * Enable billing export
 
-Mount bucket (next day) after generating billing reports:
+Mount bucket with reports into some directory:
 ```
 gcsfuse --key-file=key.json --implicit-dirs --dir-mode=775 --file-mode=775 -o allow_other billing_bucket /srv/billing_bucket
 ```
@@ -26,7 +26,7 @@ cd gcloud-billing-visualize/
 
 vim generate.bash
 PREFIX="your_report_prefix"
-FILENAME="/srv/billing_bucket/${PREFIX}-${DATE}.csv"
+BUCKET_PATH="/srv/billing_bucket"
 ```
 
 Run script:
