@@ -22,6 +22,22 @@ cat "${HEADER}" > "${INDEX_HTML}"
 sed -i -r "s/YYYY.MM.DD/$DATE/g" "${INDEX_HTML}"
 head -1 "${YESTERDAY_REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/" > "${TABLE}"
 tail -n +2 "${YESTERDAY_REPORT}" | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/" >> "${TABLE}"
+
+# Compute engine
+echo -e "</table>\n<h1>Compute engine:</h1>\n<table class=\"sortable\">" >> "${TABLE}"
+head -1 "${YESTERDAY_REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/" >> "${TABLE}"
+grep "compute-engine" "${YESTERDAY_REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/" >> "${TABLE}"
+
+# Cloud storage
+echo -e "</table>\n<h1>Cloud storage:</h1>\n<table class=\"sortable\">" >> "${TABLE}"
+head -1 "${YESTERDAY_REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/" >> "${TABLE}"
+grep "cloud-storage" "${YESTERDAY_REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/" >> "${TABLE}"
+
+# Other
+echo -e "</table>\n<h1>Other services:</h1>\n<table class=\"sortable\">" >> "${TABLE}"
+head -1 "${YESTERDAY_REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/" >> "${TABLE}"
+egrep -v "cloud-storage|compute-engine" "${YESTERDAY_REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/" >> "${TABLE}"
+
 cat "${TABLE}" >> "${INDEX_HTML}"
 cat "${FOOTER}" >> "${INDEX_HTML}"
 
