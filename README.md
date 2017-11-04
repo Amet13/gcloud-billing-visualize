@@ -59,10 +59,3 @@ nginx -s reload
 ```
 
 Check: http://billing-report.domain[.]com:8080
-
-TODO
-----
-
-* charts
-* group by line item
-* hide sections
