@@ -65,3 +65,4 @@ TODO
 
 * charts
 * group by line item
+* hide sections
