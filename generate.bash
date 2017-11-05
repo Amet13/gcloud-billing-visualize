@@ -9,7 +9,7 @@ DATE=$(date +"%Y-%m-%d" --date="2 days ago")
 FILENAME="${BUCKET_PATH}/${PREFIX}-${DATE}.csv"
 REPORT="csv/report.csv"
 INDEX_HTML="index.html"
-
+AWKFILE="cut.awk"
 HEADER="include/header.html"
 TABLE="include/table.html"
 
@@ -17,9 +17,17 @@ TABLE="include/table.html"
 TABLE_CLASS="<table class=\"sortable\">"
 TABLE_END="</table>"
 HR="\n<hr>\n\n"
+COLUMNS="Line Item,Measurement1 Total Consumption,Measurement1 Units,Cost,Currency,Project ID,Description"
 
+> "${REPORT}"
 # Generate report.csv
-cut -f "2,7,8,15,16,18,21" -d"," "${FILENAME}" | sed -r "s/Measurement1 //g" > "${REPORT}"
+{
+echo "${COLUMNS}" | sed -r "s/Measurement1 //g" | sed -r "s/\"//g"
+awk -f "${AWKFILE}" -F "," -v cols="${COLUMNS}" "${FILENAME}"
+} >> "${REPORT}"
+
+# Remove empty column
+sed -i -r "s/,$//g" "${REPORT}"
 
 # Generate html table
 cat "${HEADER}" > "${INDEX_HTML}"

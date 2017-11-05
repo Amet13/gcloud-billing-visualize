@@ -5,12 +5,41 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title>YYYY.MM.DD billing report</title>
-
-  <link rel="stylesheet" href="css/main.css">
+  <style>
+    h1 {
+      font-family: verdana, arial, sans-serif;
+      font-size: 18px;
+    }
+    table {
+      font-family: verdana, arial, sans-serif;
+      font-size: 13px;
+      color: #333333;
+      border-color: #d3d3d3;
+      border-collapse: collapse;
+    }
+    table th {
+      padding: 8px;
+      border-style: solid;
+      border-color: #d3d3d3;
+      background-color: #3b78e7;
+      color: #ffffff;
+    }
+    table th:hover {
+      cursor: pointer;
+    }
+    table tr:nth-child(even) td{
+      background-color: #ebf1fa;
+    }
+    table td {
+      padding: 8px;
+      border-style: solid;
+      border-color: #d3d3d3;
+      background-color: #fafafa;
+    }
+  </style>
   <link rel="icon" href="images/favicon.ico">
-  <script type="text/javascript" src="js/sorttable.js"></script>
+  <script type="text/javascript" src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
 </head>
 
 <body>
