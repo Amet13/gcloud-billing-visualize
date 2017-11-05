@@ -37,7 +37,7 @@ Run script:
 Add to cron:
 ```
 crontab -e
-0 1 * * * /srv/gcloud-billing-visualize/generate.bash
+0 12 * * * /srv/gcloud-billing-visualize/generate.bash
 ```
 
 Setup nginx config and set basic authentication:
