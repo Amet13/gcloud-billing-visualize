@@ -20,6 +20,7 @@ gcsfuse --key-file=key.json --implicit-dirs --dir-mode=775 --file-mode=775 -o al
 
 Clone repo and edit `generate.bash`:
 ```
+yum install -y bc
 cd /srv/
 git clone https://github.com/Amet13/gcloud-billing-visualize
 cd gcloud-billing-visualize/
@@ -32,6 +33,7 @@ BUCKET_PATH="/srv/billing_bucket"
 Run script:
 ```
 ./generate.bash
+Successfully generated new report
 ```
 
 Add to cron:
