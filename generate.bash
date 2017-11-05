@@ -18,6 +18,8 @@ TABLE_CLASS="<table class=\"sortable\">"
 TABLE_END="</table>"
 HR="\n<hr>\n\n"
 COLUMNS="Line Item,Measurement1 Total Consumption,Measurement1 Units,Cost,Currency,Project ID,Description"
+CURRENCY="$"
+SECTION=""
 
 > "${REPORT}"
 # Generate report.csv
@@ -28,6 +30,8 @@ awk -f "${AWKFILE}" -F "," -v cols="${COLUMNS}" "${FILENAME}"
 
 # Remove empty column
 sed -i -r "s/,$//g" "${REPORT}"
+
+TOTAL_COST=$(egrep "${SECTION}|Cost" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
 
 # Generate html table
 cat "${HEADER}" > "${INDEX_HTML}"
@@ -40,30 +44,39 @@ echo -e "<h1>All services:</h1>\n${TABLE_CLASS}"
 head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
 tail -n +2 "${REPORT}" | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
 echo -e "${TABLE_END}"
+echo -e "<h2>Total cost: ${CURRENCY}${TOTAL_COST}</h2>"
 } >> "${TABLE}"
 
 # Compute engine
+SECTION="compute-engine"
+TOTAL_COST=$(egrep "${SECTION}|Cost" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
 {
 echo -e "${HR}<h1>Compute engine:</h1>\n${TABLE_CLASS}"
 head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
-grep "compute-engine" "${REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
+grep "${SECTION}" "${REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
 echo -e "${TABLE_END}"
+echo -e "<h2>Total cost: ${CURRENCY}${TOTAL_COST}</h2>"
 } >> "${TABLE}"
 
 # Cloud storage
+SECTION="cloud-storage"
+TOTAL_COST=$(egrep "${SECTION}|Cost" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
 {
 echo -e "${HR}<h1>Cloud storage:</h1>\n${TABLE_CLASS}"
 head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
-grep "cloud-storage" "${REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
+grep "${SECTION}" "${REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
 echo -e "${TABLE_END}"
+echo -e "<h2>Total cost: ${CURRENCY}${TOTAL_COST}</h2>"
 } >> "${TABLE}"
 
 # Other
+TOTAL_COST=$(egrep -v "cloud-storage|compute-engine" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
 {
 echo -e "${HR}<h1>Other services:</h1>\n${TABLE_CLASS}"
 head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
 egrep -v "cloud-storage|compute-engine" "${REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
 echo -e "${TABLE_END}"
+echo -e "<h2>Total cost: ${CURRENCY}${TOTAL_COST}</h2>"
 } >> "${TABLE}"
 
 {
@@ -72,4 +85,5 @@ echo -e "${HR}<p style=\"text-align:center\">\n<a target=\"_blank\" href=\"https
 echo -e "</body>\n</html>"
 } >> "${INDEX_HTML}"
 
+echo "Successfully generated new report"
 exit 0
