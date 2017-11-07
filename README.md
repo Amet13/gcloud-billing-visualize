@@ -27,7 +27,7 @@ cd gcloud-billing-visualize/
 vim generate.bash
 PREFIX="your_report_prefix"
 BUCKET_PATH="/srv/billing_bucket"
-ENABLE_MONTH_REPORT=0 # If you want to disable last month report
+ENABLE_MONTH_REPORT=0 # If you want to disable month report
 ```
 
 Run script:

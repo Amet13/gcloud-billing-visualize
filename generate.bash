@@ -4,12 +4,16 @@ set -e
 
 bc --version > /dev/null
 
+# Edit this settings
 PREFIX="report"
 BUCKET_PATH="./csv"
+ENABLE_MONTH_REPORT=1
+# End settings edit
+
 DATE=$(date +"%Y-%m-%d" --date="2 days ago")
 #DATE="2017-11-03" # I'm using it for demo
 LAST_MONTH=$(date +'%Y-%m' -d 'last month')
-ENABLE_MONTH_REPORT=1
+CURRENT_MONTH=$(date +'%Y-%m')
 
 FILENAME="${BUCKET_PATH}/${PREFIX}-${DATE}.csv"
 REPORT="csv/report.csv"
@@ -46,15 +50,23 @@ cat "${HEADER}" > "${INDEX_HTML}"
 sed -i -r "s/YYYY.MM.DD/$DATE/g" "${INDEX_HTML}"
 sed -i -r -e "s/XXX/$CE_COST/g" -e "s/YYY/$CS_COST/g" -e "s/ZZZ/$OTHER_COST/g" "${INDEX_HTML}"
 
-# Generate report for last month
+# Generate report for last and current month
 LAST_MONTH_COST=0
+CURRENT_MONTH_COST=0
 if [[ ${ENABLE_MONTH_REPORT} == "1" ]]; then
     while read DAY; do
         LAST_DAY_COST=$(awk -f "${AWKFILE}" -F "," -v cols=Cost "${DAY}" | sed -r 's/,//g' | paste -sd+ | bc)
         LAST_MONTH_COST=$(echo "${LAST_MONTH_COST}" + "${LAST_DAY_COST}" | bc)
     done < <(ls -1 "${BUCKET_PATH}"/"${PREFIX}"-"${LAST_MONTH}"-*.csv)
+    while read DAY; do
+        CURRENT_DAY_COST=$(awk -f "${AWKFILE}" -F "," -v cols=Cost "${DAY}" | sed -r 's/,//g' | paste -sd+ | bc)
+        CURRENT_MONTH_COST=$(echo "${CURRENT_MONTH_COST}" + "${CURRENT_DAY_COST}" | bc)
+    done < <(ls -1 "${BUCKET_PATH}"/"${PREFIX}"-"${CURRENT_MONTH}"-*.csv)
     > "${TABLE}"
-    echo -e "<h1>Last month usage (${LAST_MONTH}): ${CURRENCY}${LAST_MONTH_COST}</h1>\n<hr>" >"${TABLE}"
+    {
+        echo -e "<h1>Last month usage (${LAST_MONTH}): ${CURRENCY}${LAST_MONTH_COST}</h1>\n<hr>"
+        echo -e "<h1>Current month usage (${CURRENT_MONTH}): ${CURRENCY}${CURRENT_MONTH_COST}</h1>\n<hr>"
+    } >> "${TABLE}"
 fi
 
 # Add chart
