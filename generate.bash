@@ -2,6 +2,8 @@
 
 set -e
 
+bc --version > /dev/null
+
 PREFIX="report"
 BUCKET_PATH="./csv"
 DATE=$(date +"%Y-%m-%d" --date="2 days ago")
@@ -31,11 +33,15 @@ awk -f "${AWKFILE}" -F "," -v cols="${COLUMNS}" "${FILENAME}"
 # Remove empty column
 sed -i -r "s/,$//g" "${REPORT}"
 
-TOTAL_COST=$(egrep "${SECTION}|Cost" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
+TOTAL_COST=$(awk -f "${AWKFILE}" -F "," -v cols=Cost "${REPORT}" | sed -r 's/,//g' | paste -sd+ | bc)
+CE_COST=$(egrep "${compute-engine}|Cost" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
+CS_COST=$(egrep "${cloud-storage}|Cost" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
+OTHER_COST=$(egrep -v "cloud-storage|compute-engine" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
 
 # Generate html table
 cat "${HEADER}" > "${INDEX_HTML}"
 sed -i -r "s/YYYY.MM.DD/$DATE/g" "${INDEX_HTML}"
+sed -i -r -e "s/XXX/$CE_COST/g" -e "s/YYY/$CS_COST/g" -e "s/ZZZ/$OTHER_COST/g" "${INDEX_HTML}"
 
 > "${TABLE}"
 # All services
@@ -48,35 +54,32 @@ echo -e "<h2>Total cost: ${CURRENCY}${TOTAL_COST}</h2>"
 } >> "${TABLE}"
 
 # Compute engine
-SECTION="compute-engine"
-TOTAL_COST=$(egrep "${SECTION}|Cost" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
 {
+SECTION="compute-engine"
 echo -e "${HR}<h1>Compute engine:</h1>\n${TABLE_CLASS}"
 head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
 grep "${SECTION}" "${REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
 echo -e "${TABLE_END}"
-echo -e "<h2>Total cost: ${CURRENCY}${TOTAL_COST}</h2>"
+echo -e "<h2>Total cost: ${CURRENCY}${CE_COST}</h2>"
 } >> "${TABLE}"
 
 # Cloud storage
 SECTION="cloud-storage"
-TOTAL_COST=$(egrep "${SECTION}|Cost" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
 {
 echo -e "${HR}<h1>Cloud storage:</h1>\n${TABLE_CLASS}"
 head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
 grep "${SECTION}" "${REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
 echo -e "${TABLE_END}"
-echo -e "<h2>Total cost: ${CURRENCY}${TOTAL_COST}</h2>"
+echo -e "<h2>Total cost: ${CURRENCY}${CS_COST}</h2>"
 } >> "${TABLE}"
 
 # Other
-TOTAL_COST=$(egrep -v "cloud-storage|compute-engine" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
 {
 echo -e "${HR}<h1>Other services:</h1>\n${TABLE_CLASS}"
 head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
 egrep -v "cloud-storage|compute-engine" "${REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
 echo -e "${TABLE_END}"
-echo -e "<h2>Total cost: ${CURRENCY}${TOTAL_COST}</h2>"
+echo -e "<h2>Total cost: ${CURRENCY}${OTHER_COST}</h2>"
 } >> "${TABLE}"
 
 {

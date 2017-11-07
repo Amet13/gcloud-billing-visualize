@@ -41,12 +41,99 @@
       border-color: #d3d3d3;
       background-color: #fafafa;
     }
+    #chartdiv {
+      width: 80%;
+      height: 300px;
+      font-size: 15px;
+    }
+    .amcharts-pie-slice {
+      transform: scale(1);
+      transform-origin: 50% 50%;
+      transition-duration: 0.3s;
+      transition: all .3s ease-out;
+      -webkit-transition: all .3s ease-out;
+      -moz-transition: all .3s ease-out;
+      -o-transition: all .3s ease-out;
+      cursor: pointer;
+      box-shadow: 0 0 30px 0 #000;
+    }
+    .amcharts-pie-slice:hover {
+      transform: scale(1.1);
+      filter: url(#shadow);
+    }
   </style>
+
   <link rel="icon" href="images/favicon.ico">
+
   <script type="text/javascript" src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+  <script type="text/javascript" src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+  <script type="text/javascript" src="https://www.amcharts.com/lib/3/pie.js"></script>
+  <script type="text/javascript" src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+  <script>
+    var chart = AmCharts.makeChart("chartdiv", {
+      "type": "pie",
+      "colors": ["#ea1162", "#19B278", "#3CBEC5","#F6A85A","#F1768B"],
+      "startDuration": 1,
+      "theme": "light",
+      "addClassNames": true,
+      "legend":{
+        "position":"right",
+        "marginRight":200,
+        "autoMargins":false
+      },
+      "innerRadius": "80%",
+      "defs": {
+        "filter": [{
+          "id": "shadow",
+          "width": "200%",
+          "height": "200%",
+          "feOffset": {
+            "result": "offOut",
+            "in": "SourceAlpha",
+            "dx": 0,
+            "dy": 0
+          },
+          "feGaussianBlur": {
+            "result": "blurOut",
+            "in": "offOut",
+            "stdDeviation": 5
+          },
+          "feBlend": {
+            "in": "SourceGraphic",
+            "in2": "blurOut",
+            "mode": "normal"
+          }
+        }]
+      },
+      "dataProvider": [{
+        "service": "Compute eng",
+        "cost": 14.242171
+      }, {
+        "service": "Cloud storage",
+        "cost": 4.074950
+      }, {
+        "service": "Other services",
+        "cost": 0
+      }],
+      "valueField": "cost",
+      "titleField": "service",
+    });
+    chart.addListener("init", handleInit);
+    chart.addListener("rollOverSlice", function(e) {
+      handleRollOver(e);
+    });
+    function handleInit(){
+      chart.legend.addListener("rollOverItem", handleRollOver);
+    }
+    function handleRollOver(e){
+      var wedge = e.dataItem.wedge.node;
+      wedge.parentNode.appendChild(wedge);
+    }
+  </script>
 </head>
 
 <body>
+<div id="chartdiv"></div>
 <h1>All services:</h1>
 <table class="sortable">
 <tr>
