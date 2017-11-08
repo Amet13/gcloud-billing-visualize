@@ -39,7 +39,7 @@ Successfully generated new report
 Add to cron:
 ```
 crontab -e
-0 12 * * * /srv/gcloud-billing-visualize/generate.bash &> /dev/null
+0 12 * * * cd /srv/gcloud-billing-visualize/ ; /srv/gcloud-billing-visualize/generate.bash &> /dev/null
 ```
 
 Setup nginx config and set basic authentication:
