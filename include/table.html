@@ -1,14 +1,20 @@
+
 <div class="row">
-  <div class="column"><h1>Last month usage (2017-10): $14.317121</h1></div>
-  <div class="column"><h1>Current month usage (2017-11): $18.317121</h1></div>
-  <div class="column"><h1>Daily usage (2017-11-03): $18.317121</h1></div>
+  <div class="column"><h1>Last month cost (2017-10): $14.317121</h1></div>
+  <div class="column"><h1>Current month cost (2017-11): $18.317121</h1></div>
+  <div class="column"><h1>Daily cost (2017-11-03): $18.317121</h1></div>
   <div class="column"><h1>Next month cost prediction (2017-12): $549.513630</h1></div>
 </div>
+
 <hr>
+
 <h1>Chart for 2017-11-03:</h1>
 <div id="chartdiv"></div>
+
 <hr>
-<h1>All services ($18.317121):</h1>
+
+<h1>All services ($18.317121): <a id="myALL" href="javascript:toggle2('ALL','myALL');">show/hide</a></h1>
+<div id="ALL">
 <table class="sortable">
 <tr>
   <th>Line Item</th>
@@ -273,10 +279,13 @@
 </tr>
 </table>
 <h2>Total cost: $18.317121</h2>
+</div>
 
 <hr>
 
-<h1>Compute engine ($14.242171):</h1>
+<h1>Compute engine ($14.242171):
+<a id="mycompute-engine" href="javascript:toggle2('compute-engine','mycompute-engine');">show/hide</a></h1>
+<div id="compute-engine">
 <table class="sortable">
 <tr>
   <th>Line Item</th>
@@ -424,10 +433,13 @@
 </tr>
 </table>
 <h2>Total cost: $14.242171</h2>
+</div>
 
 <hr>
 
-<h1>Cloud storage ($4.074950):</h1>
+<h1>Cloud storage ($4.074950):
+<a id="mycloud-storage" href="javascript:toggle2('cloud-storage','mycloud-storage');">show/hide</a></h1>
+<div id="cloud-storage">
 <table class="sortable">
 <tr>
   <th>Line Item</th>
@@ -521,10 +533,13 @@
 </tr>
 </table>
 <h2>Total cost: $4.074950</h2>
+</div>
 
 <hr>
 
-<h1>Other services ($0):</h1>
+<h1>Other services ($0):
+<a id="myother" href="javascript:toggle2('other','myother');">show/hide</a></h1>
+<div id="other">
 <table class="sortable">
 <tr>
   <th>Line Item</th>
@@ -555,3 +570,4 @@
 </tr>
 </table>
 <h2>Total cost: $0</h2>
+</div>

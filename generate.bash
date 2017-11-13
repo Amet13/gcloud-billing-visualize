@@ -32,12 +32,17 @@ CURRENCY="$"
 ROW="<div class=\"row\">"
 COLUMN="<div class=\"column\">"
 DIV="</div>"
-SECTION=""
+SHOW_HIDE="<a id=\"${SECTION}\" href=\"javascript:toggle2('${SECTION}','${SECTION}');\">"
 
 if [[ ! -f ${FILENAME} ]]; then
     echo "File ${FILENAME} does not exists"
     exit 1
 fi
+
+# Function for showing and hiding info for sections
+show_hide () {
+    SHOW_HIDE="<a id=\"my${SECTION}\" href=\"javascript:toggle2('${SECTION}','my${SECTION}');\">show/hide</a>"
+}
 
 > "${REPORT}"
 # Generate report.csv
@@ -74,57 +79,74 @@ if [[ ${ENABLE_MONTH_REPORT} == "1" ]]; then
     done < <(ls -1 "${BUCKET_PATH}"/"${PREFIX}"-"${CURRENT_MONTH}"-*.csv)
     > "${TABLE}"
     {
-        echo -e "${ROW}"
-        echo -e "  ${COLUMN}<h1>Last month usage (${LAST_MONTH}): ${CURRENCY}${LAST_MONTH_COST}</h1>${DIV}"
-        echo -e "  ${COLUMN}<h1>Current month usage (${CURRENT_MONTH}): ${CURRENCY}${CURRENT_MONTH_COST}</h1>${DIV}"
-        echo -e "  ${COLUMN}<h1>Daily usage (${DATE}): ${CURRENCY}${TOTAL_COST}</h1>${DIV}"
+        echo -e "\n${ROW}"
+        echo -e "  ${COLUMN}<h1>Last month cost (${LAST_MONTH}): ${CURRENCY}${LAST_MONTH_COST}</h1>${DIV}"
+        echo -e "  ${COLUMN}<h1>Current month cost (${CURRENT_MONTH}): ${CURRENCY}${CURRENT_MONTH_COST}</h1>${DIV}"
+        echo -e "  ${COLUMN}<h1>Daily cost (${DATE}): ${CURRENCY}${TOTAL_COST}</h1>${DIV}"
         echo -e "  ${COLUMN}<h1>Next month cost prediction (${NEXT_MONTH}): ${CURRENCY}${NEXT_MONTH_COST}</h1>${DIV}"
-        echo -e "${DIV}\n<hr>"
+        echo -e "${DIV}\n\n<hr>\n"
     } >> "${TABLE}"
 fi
 
 # Add chart
 {
     echo -e "<h1>Chart for ${DATE}:</h1>"
-    echo -e "<div id=\"chartdiv\"></div>\n<hr>"
+    echo -e "<div id=\"chartdiv\"></div>"
 } >> "${TABLE}"
 
 # All services
+SECTION="ALL"
+show_hide
 {
-    echo -e "<h1>All services (${CURRENCY}${TOTAL_COST}):</h1>\n${TABLE_CLASS}"
+    echo -e "${HR}<h1>All services (${CURRENCY}${TOTAL_COST}): ${SHOW_HIDE}</h1>\n<div id=\"${SECTION}\">"
+    echo -e "${TABLE_CLASS}"
     head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
     tail -n +2 "${REPORT}" | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
     echo -e "${TABLE_END}"
     echo -e "<h2>Total cost: ${CURRENCY}${TOTAL_COST}</h2>"
+    echo -e "${DIV}"
 } >> "${TABLE}"
 
 # Compute engine
 SECTION="compute-engine"
+show_hide
 {
-    echo -e "${HR}<h1>Compute engine (${CURRENCY}${CE_COST}):</h1>\n${TABLE_CLASS}"
+    echo -e "${HR}<h1>Compute engine (${CURRENCY}${CE_COST}):"
+    echo -e "${SHOW_HIDE}</h1>\n<div id=\"${SECTION}\">"
+    echo -e "${TABLE_CLASS}"
     head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
     grep "${SECTION}" "${REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
     echo -e "${TABLE_END}"
     echo -e "<h2>Total cost: ${CURRENCY}${CE_COST}</h2>"
+    echo -e "${DIV}"
 } >> "${TABLE}"
 
 # Cloud storage
 SECTION="cloud-storage"
+show_hide
 {
-    echo -e "${HR}<h1>Cloud storage (${CURRENCY}${CS_COST}):</h1>\n${TABLE_CLASS}"
+    echo -e "${HR}<h1>Cloud storage (${CURRENCY}${CS_COST}):"
+    echo -e "${SHOW_HIDE}</h1>\n<div id=\"${SECTION}\">"
+    echo -e "${TABLE_CLASS}"
     head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
     grep "${SECTION}" "${REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
     echo -e "${TABLE_END}"
     echo -e "<h2>Total cost: ${CURRENCY}${CS_COST}</h2>"
+    echo -e "${DIV}"
 } >> "${TABLE}"
 
 # Other
+SECTION="other"
+show_hide
 {
-    echo -e "${HR}<h1>Other services (${CURRENCY}${OTHER_COST}):</h1>\n${TABLE_CLASS}"
+    echo -e "${HR}<h1>Other services (${CURRENCY}${OTHER_COST}):"
+    echo -e "${SHOW_HIDE}</h1>\n<div id=\"${SECTION}\">"
+    echo -e "${TABLE_CLASS}"
     head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
     egrep -v "cloud-storage|compute-engine" "${REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
     echo -e "${TABLE_END}"
     echo -e "<h2>Total cost: ${CURRENCY}${OTHER_COST}</h2>"
+    echo -e "${DIV}"
 } >> "${TABLE}"
 
 {

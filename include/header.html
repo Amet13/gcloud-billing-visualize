@@ -62,8 +62,8 @@
     }
     .column {
       float: left;
-      width: 20%;
-      padding: 10px;
+      width: 24%;
+      padding: 3px;
     }
     .row:after {
       content: "";
@@ -74,11 +74,12 @@
 
   <link rel="icon" href="images/favicon.ico">
 
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
   <script type="text/javascript" src="https://www.amcharts.com/lib/3/amcharts.js"></script>
   <script type="text/javascript" src="https://www.amcharts.com/lib/3/pie.js"></script>
   <script type="text/javascript" src="https://www.amcharts.com/lib/3/themes/light.js"></script>
-  <script>
+  <script language="javascript">
     var chart = AmCharts.makeChart("chartdiv", {
       "type": "pie",
       "colors": ["#ea1162", "#19B278", "#3CBEC5","#F6A85A","#F1768B"],
@@ -132,6 +133,23 @@
     function handleRollOver(e){
       var wedge = e.dataItem.wedge.node;
       wedge.parentNode.appendChild(wedge);
+    }
+  </script>
+  <script language="javascript">
+    function toggle2(showHideDiv, switchTextDiv) {
+      var ele = document.getElementById(showHideDiv);
+      var text = document.getElementById(switchTextDiv);
+      if(ele.style.display == "block")
+        ele.style.display = "none";
+      else
+        ele.style.display = "block";
+    }
+    function toggle3(contentDiv, controlDiv) {
+      if (contentDiv.constructor == Array)
+        for(i=0; i < contentDiv.length; i++)
+          toggle2(contentDiv[i], controlDiv[i]);
+        else
+          toggle2(contentDiv, controlDiv);
     }
   </script>
 </head>
