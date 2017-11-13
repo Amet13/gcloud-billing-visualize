@@ -10,8 +10,8 @@ BUCKET_PATH="./csv"
 ENABLE_MONTH_REPORT=1
 # End settings edit
 
-DATE=$(date +"%Y-%m-%d" --date="2 days ago")
-#DATE="2017-11-03" # I'm using it for demo
+#DATE=$(date +"%Y-%m-%d" --date="yesterday")
+DATE="2017-11-03" # I'm using it for demo
 LAST_MONTH=$(date +'%Y-%m' -d 'last month')
 CURRENT_MONTH=$(date +'%Y-%m')
 
@@ -28,7 +28,15 @@ TABLE_END="</table>"
 HR="\n<hr>\n\n"
 COLUMNS="Line Item,Measurement1 Total Consumption,Measurement1 Units,Cost,Currency,Project ID,Description"
 CURRENCY="$"
+ROW="<div class=\"row\">"
+COLUMN="<div class=\"column\">"
+DIV="</div>"
 SECTION=""
+
+if [[ ! -f ${FILENAME} ]]; then
+    echo "File ${FILENAME} does not exists"
+    exit 1
+fi
 
 > "${REPORT}"
 # Generate report.csv
@@ -64,8 +72,11 @@ if [[ ${ENABLE_MONTH_REPORT} == "1" ]]; then
     done < <(ls -1 "${BUCKET_PATH}"/"${PREFIX}"-"${CURRENT_MONTH}"-*.csv)
     > "${TABLE}"
     {
-        echo -e "<h1>Last month usage (${LAST_MONTH}): ${CURRENCY}${LAST_MONTH_COST}</h1>\n<hr>"
-        echo -e "<h1>Current month usage (${CURRENT_MONTH}): ${CURRENCY}${CURRENT_MONTH_COST}</h1>\n<hr>"
+        echo -e "${ROW}"
+        echo -e "  ${COLUMN}<h1>Last month usage (${LAST_MONTH}): ${CURRENCY}${LAST_MONTH_COST}</h1>${DIV}"
+        echo -e "  ${COLUMN}<h1>Current month usage (${CURRENT_MONTH}): ${CURRENCY}${CURRENT_MONTH_COST}</h1>${DIV}"
+        echo -e "  ${COLUMN}<h1>Daily usage (${DATE}): ${CURRENCY}${TOTAL_COST}</h1>${DIV}"
+        echo -e "${DIV}\n<hr>"
     } >> "${TABLE}"
 fi
 
