@@ -10,10 +10,11 @@ BUCKET_PATH="./csv"
 ENABLE_MONTH_REPORT=1
 # End settings edit
 
-#DATE=$(date +"%Y-%m-%d" --date="yesterday")
-DATE="2017-11-03" # I'm using it for demo
+DATE=$(date +"%Y-%m-%d" --date="yesterday")
+#DATE="2017-11-03" # I'm using it for demo
 LAST_MONTH=$(date +'%Y-%m' -d 'last month')
 CURRENT_MONTH=$(date +'%Y-%m')
+NEXT_MONTH=$(date +'%Y-%m' -d 'next month')
 
 FILENAME="${BUCKET_PATH}/${PREFIX}-${DATE}.csv"
 REPORT="csv/report.csv"
@@ -52,6 +53,7 @@ TOTAL_COST=$(awk -f "${AWKFILE}" -F "," -v cols=Cost "${REPORT}" | sed -r 's/,//
 CE_COST=$(egrep "${compute-engine}|Cost" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
 CS_COST=$(egrep "${cloud-storage}|Cost" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
 OTHER_COST=$(egrep -v "cloud-storage|compute-engine" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
+NEXT_MONTH_COST=$(echo "${TOTAL_COST} * 30" | bc)
 
 # Generate html table
 cat "${HEADER}" > "${INDEX_HTML}"
@@ -76,6 +78,7 @@ if [[ ${ENABLE_MONTH_REPORT} == "1" ]]; then
         echo -e "  ${COLUMN}<h1>Last month usage (${LAST_MONTH}): ${CURRENCY}${LAST_MONTH_COST}</h1>${DIV}"
         echo -e "  ${COLUMN}<h1>Current month usage (${CURRENT_MONTH}): ${CURRENCY}${CURRENT_MONTH_COST}</h1>${DIV}"
         echo -e "  ${COLUMN}<h1>Daily usage (${DATE}): ${CURRENCY}${TOTAL_COST}</h1>${DIV}"
+        echo -e "  ${COLUMN}<h1>Next month cost prediction (${NEXT_MONTH}): ${CURRENCY}${NEXT_MONTH_COST}</h1>${DIV}"
         echo -e "${DIV}\n<hr>"
     } >> "${TABLE}"
 fi
@@ -88,7 +91,7 @@ fi
 
 # All services
 {
-    echo -e "<h1>All services:</h1>\n${TABLE_CLASS}"
+    echo -e "<h1>All services (${CURRENCY}${TOTAL_COST}):</h1>\n${TABLE_CLASS}"
     head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
     tail -n +2 "${REPORT}" | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
     echo -e "${TABLE_END}"
@@ -98,7 +101,7 @@ fi
 # Compute engine
 SECTION="compute-engine"
 {
-    echo -e "${HR}<h1>Compute engine:</h1>\n${TABLE_CLASS}"
+    echo -e "${HR}<h1>Compute engine (${CURRENCY}${CE_COST}):</h1>\n${TABLE_CLASS}"
     head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
     grep "${SECTION}" "${REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
     echo -e "${TABLE_END}"
@@ -108,7 +111,7 @@ SECTION="compute-engine"
 # Cloud storage
 SECTION="cloud-storage"
 {
-    echo -e "${HR}<h1>Cloud storage:</h1>\n${TABLE_CLASS}"
+    echo -e "${HR}<h1>Cloud storage (${CURRENCY}${CS_COST}):</h1>\n${TABLE_CLASS}"
     head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
     grep "${SECTION}" "${REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
     echo -e "${TABLE_END}"
@@ -117,7 +120,7 @@ SECTION="cloud-storage"
 
 # Other
 {
-    echo -e "${HR}<h1>Other services:</h1>\n${TABLE_CLASS}"
+    echo -e "${HR}<h1>Other services (${CURRENCY}${OTHER_COST}):</h1>\n${TABLE_CLASS}"
     head -1 "${REPORT}" | sed -e "s/^/<tr>\n  <th>/" -e "s/,/<\/th>\n  <th>/g" -e "s/$/<\/th>\n<\/tr>/"
     egrep -v "cloud-storage|compute-engine" "${REPORT}" | tail -n +2 | sed -e "s/^/<tr>\n  <td>/" -e "s/,/<\/td>\n  <td>/g" -e "s/$/<\/td>\n<\/tr>/"
     echo -e "${TABLE_END}"
