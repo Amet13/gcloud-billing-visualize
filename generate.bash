@@ -101,7 +101,7 @@ done < <(ls -1 "${BUCKET_PATH}"/"${PREFIX}"-"${CURRENT_MONTH}"-*.csv)
     echo -e "  ${COLUMN}<h1>Current month cost (${CURRENT_MONTH}): ${CURRENCY}${CURRENT_MONTH_COST}</h1>${DIV}"
     echo -e "  ${COLUMN}<h1>Daily cost (${DATE}): ${CURRENCY}${TOTAL_COST}</h1>${DIV}"
     echo -e "  ${COLUMN}<h1>Next month cost prediction (${NEXT_MONTH}): ${CURRENCY}${NEXT_MONTH_COST}</h1>${DIV}"
-    echo -e "${DIV}\n"
+    echo -e "${DIV}"
 } >> "${TABLE}"
 
 
@@ -114,7 +114,7 @@ done
 # Print table and footer
 {
     cat "${TABLE}"
-    echo -e "${HR}<p style=\"text-align:center\">\n<a target=\"_blank\" href=\"https://github.com/Amet13/gcloud-billing-visualize\" title=\"Hosted on GitHub\"><img src=\"images/github_80x15.png\" width=\"80\" height=\"15\" alt=\"Source on GitHub\"/></a>\n</p>"
+    echo -e "${HR}<p style=\"text-align:center\">\n  <a target=\"_blank\" href=\"https://github.com/Amet13/gcloud-billing-visualize\" title=\"Hosted on GitHub\"><img src=\"images/github_80x15.png\" width=\"80\" height=\"15\" alt=\"Source on GitHub\"/></a>\n</p>"
     echo -e "</body>\n</html>"
 } >> "${INDEX_HTML}"
 
