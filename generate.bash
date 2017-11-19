@@ -61,8 +61,8 @@ table_gen () {
         TOTAL_COST=$(egrep -v "cloud-storage|compute-engine" "${REPORT}" | awk -f "${AWKFILE}" -F "," -v cols=Cost  | sed -r 's/,//g' | paste -sd+ | bc)
     fi
     echo -e "${TABLE_END}"
-    echo -e "<h2>Total cost: ${CURRENCY}${TOTAL_COST}</h2>"
     echo -e "${DIV}"
+    echo -e "<h2>Total cost: ${CURRENCY}${TOTAL_COST}</h2>"
 }
 
 > "${REPORT}"
