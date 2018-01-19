@@ -35,7 +35,7 @@ Run script:
 Successfully generated new report
 ```
 
-Add to cron (GCP generates yesterday's report at ~11-12 pm):
+Add to cron:
 ```
 crontab -e
 0 12 * * * cd /srv/gcloud-billing-visualize/ && ./generate.bash &> /dev/null
