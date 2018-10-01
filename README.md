@@ -14,11 +14,13 @@ How to setup
 * Enable billing export
 
 Mount bucket with reports into some directory:
+
 ```
 gcsfuse --key-file=key.json --implicit-dirs --dir-mode=775 --file-mode=775 -o allow_other billing_bucket /srv/billing_bucket
 ```
 
 Clone repo and edit `generate.bash`:
+
 ```
 cd /srv/
 git clone https://github.com/Amet13/gcloud-billing-visualize
@@ -30,18 +32,21 @@ BUCKET_PATH="/srv/billing_bucket"
 ```
 
 Run script:
+
 ```
 ./generate.bash
 Successfully generated new report
 ```
 
 Add to cron:
+
 ```
 crontab -e
 0 12 * * * cd /srv/gcloud-billing-visualize/ && ./generate.bash &> /dev/null
 ```
 
 Setup nginx config and set basic authentication:
+
 ```
 vim /etc/nginx/conf.d/billing-report.conf
 server {
