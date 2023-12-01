@@ -3,7 +3,7 @@ gcloud-billing-visualize
 
 [![License](https://img.shields.io/badge/license-GNU_GPLv3-green.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 
-Visualize your google cloud daily reports with pretty html page — https://gcloud-billing.amet13.name/
+Visualize your google cloud daily reports with pretty html page
 
 How to setup
 ------------
